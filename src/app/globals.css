@@ -14,9 +14,19 @@ body {
 body {
   color: black;
   background: white;
+  padding: 1rem;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  padding: 1rem 1rem 1rem 0;
+}
+
+a + a {
+  padding-left: 1rem;
+}
+
+ul {
+  padding-left: 1rem;
 }

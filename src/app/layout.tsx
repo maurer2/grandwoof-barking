@@ -33,16 +33,14 @@ export default async function RootLayout({
           {Boolean(rootCategoriesFormatted.length) && (
             <nav>
               {rootCategoriesFormatted.map((category) => (
-                <>
-                  <Link
-                    href={{
-                      pathname: category.label,
-                    }}
-                    key={category.label}
-                  >
-                    {category.label}
-                  </Link>{' '}
-                </>
+                <Link
+                  href={{
+                    pathname: category.label,
+                  }}
+                  key={category.label}
+                >
+                  {category.label}
+                </Link>
               ))}
             </nav>
           )}

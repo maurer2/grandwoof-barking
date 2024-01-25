@@ -59,17 +59,17 @@ function CategoryContent({
 
   return (
     <div>
-      <h3>Current page: {currentPage}</h3>
+      <h3>Results for page: {currentPage}</h3>
       <div>
         <button disabled={!prevPage} onClick={handlePreviousButtonClick} type="button">
           Previous page
         </button>{' '}
-        <span>{currentPageNumber ?? '-'}</span>{' '}
+        <span> {currentPageNumber ?? '-'} </span>{' '}
         <button disabled={!nextPage} onClick={handleNextButtonClick} type="button">
           Next page
         </button>
       </div>
-      {(isLoading || isFetching) && <p>Loading</p>}
+      {(isLoading || isFetching) && <p>Loading data on the client!</p>}
       {!isLoading && !isFetching && isSuccess && (
         <ul>
           {data.results.map((entry) => (
