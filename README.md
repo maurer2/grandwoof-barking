@@ -1,4 +1,5 @@
-# grandwoof-barking
-Live long and prosper.
+# Grandwoof Barking
 
-Trying out mixing React Query/TanStack Query with Server actions. Initial fetching happens server-side and subsequent fetches happen client side
+Mixing TanStack Query with server actions. Initial fetching happens server-side and subsequent fetches happen client side.
+
+![image](image.gif)
