@@ -42,35 +42,33 @@ function CategoryContent({
   const nextPage = data?.next;
 
   function handlePreviousButtonClick() {
-    if (!prevPage) {
-      return;
+    if (prevPage) {
+      setCurrentPage(prevPage);
     }
-
-    setCurrentPage(prevPage);
   }
 
   function handleNextButtonClick() {
-    if (!nextPage) {
-      return;
+    if (nextPage) {
+      setCurrentPage(nextPage);
     }
-
-    setCurrentPage(nextPage);
   }
+
+  const isBusy = isLoading || isFetching;
 
   return (
     <div>
       <h3>Results for page: {currentPage}</h3>
       <div>
-        <button disabled={!prevPage} onClick={handlePreviousButtonClick} type="button">
+        <button disabled={!prevPage || isBusy} onClick={handlePreviousButtonClick} type="button">
           Previous page
         </button>{' '}
         <span> {currentPageNumber ?? '-'} </span>{' '}
-        <button disabled={!nextPage} onClick={handleNextButtonClick} type="button">
+        <button disabled={!nextPage || isBusy} onClick={handleNextButtonClick} type="button">
           Next page
         </button>
       </div>
-      {(isLoading || isFetching) && <p>Loading data on the client!</p>}
-      {!isLoading && !isFetching && isSuccess && (
+      {isBusy && <p>Loading data on the client!</p>}
+      {!isBusy && isSuccess && (
         <ul>
           {data.results.map((entry) => (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
