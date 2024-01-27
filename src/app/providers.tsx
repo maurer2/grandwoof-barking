@@ -11,7 +11,7 @@ export const queryClientConfig: QueryClientConfig = {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       retry: false,
-      staleTime: 0,
+      staleTime: Infinity,
     },
   },
 };

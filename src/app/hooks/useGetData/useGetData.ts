@@ -10,15 +10,7 @@ export const fetcher = async <T>(url: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-function useGetData<T>({
-  initialData,
-  key,
-  url,
-}: {
-  initialData: T | undefined;
-  key: string[];
-  url: string;
-}) {
+function useGetData<T>({ initialData, key, url }: { initialData?: T; key: string[]; url: string }) {
   const queryResult = useQuery({
     initialData,
     placeholderData: keepPreviousData,

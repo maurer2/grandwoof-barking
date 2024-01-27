@@ -59,7 +59,8 @@ function CategoryContent({
   return (
     <div>
       <h3>
-        <span>Results</span> {isFetching && <span>(Loading data on the client!)</span>}
+        <span>Results</span> {isSuccess && <span>({categoryData.count})</span>}{' '}
+        {isFetching && <span>(Loading data on the client!)</span>}
       </h3>
       <div>
         <button
