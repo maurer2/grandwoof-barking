@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export const fetcher = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
@@ -10,9 +10,18 @@ export const fetcher = async <T>(url: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-function useGetData<T>({ initialData, key, url }: { initialData: T; key: string[]; url: string }) {
+function useGetData<T>({
+  initialData,
+  key,
+  url,
+}: {
+  initialData: T | undefined;
+  key: string[];
+  url: string;
+}) {
   const queryResult = useQuery({
     initialData,
+    placeholderData: keepPreviousData,
     queryFn: () => fetcher<T>(url),
     queryKey: key,
   });

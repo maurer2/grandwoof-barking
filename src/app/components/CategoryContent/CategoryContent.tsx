@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import useGetData from '../../hooks/useGetData/useGetData';
 
@@ -14,65 +14,70 @@ type Payload = {
 };
 
 export type CategoryContentProps = {
+  baseURLOfCategory: string;
   category: string;
   initialData: Payload;
-  urlOfFirstPage: string;
+  initialPageNumber: number;
 };
 
 function CategoryContent({
+  baseURLOfCategory,
   category,
   initialData,
-  urlOfFirstPage,
+  initialPageNumber,
 }: CategoryContentProps): ReactElement {
-  const [currentPage, setCurrentPage] = useState(urlOfFirstPage);
-  const { data, isFetching, isLoading, isSuccess } = useGetData<Payload>({
-    initialData,
-    key: [category, currentPage],
-    url: currentPage,
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(initialPageNumber);
+  const currentPageURL = `${baseURLOfCategory}/?page=${currentPageNumber}`;
+
+  const {
+    data: categoryData,
+    isFetching,
+    isPending,
+    isSuccess,
+  } = useGetData<Payload>({
+    // https://github.com/TanStack/query/issues/6353
+    initialData: initialPageNumber === currentPageNumber ? initialData : undefined,
+    key: [category, currentPageNumber.toString()],
+    url: currentPageURL,
   });
 
-  const currentPageNumber = useMemo(() => {
-    const queryParams = new URL(currentPage).searchParams;
-    const page = queryParams.get('page');
-
-    return page;
-  }, [currentPage]);
-
-  const prevPage = data?.previous;
-  const nextPage = data?.next;
+  const hasPreviousPage = !isPending && Boolean(categoryData?.previous?.length);
+  const hasNextPage = !isPending && Boolean(categoryData?.next?.length);
 
   function handlePreviousButtonClick() {
-    if (prevPage) {
-      setCurrentPage(prevPage);
+    if (hasPreviousPage) {
+      setCurrentPageNumber((previousValue) => previousValue - 1);
     }
   }
 
   function handleNextButtonClick() {
-    if (nextPage) {
-      setCurrentPage(nextPage);
+    if (hasNextPage) {
+      setCurrentPageNumber((previousValue) => previousValue + 1);
     }
   }
 
-  const isBusy = isLoading || isFetching;
-
   return (
     <div>
-      <h3>Results for page: {currentPage}</h3>
+      <h3>
+        <span>Results</span> {isFetching && <span>(Loading data on the client!)</span>}
+      </h3>
       <div>
-        <button disabled={!prevPage || isBusy} onClick={handlePreviousButtonClick} type="button">
+        <button
+          disabled={!hasPreviousPage || isFetching}
+          onClick={handlePreviousButtonClick}
+          type="button"
+        >
           Previous page
         </button>{' '}
-        <span> {currentPageNumber ?? '-'} </span>{' '}
-        <button disabled={!nextPage || isBusy} onClick={handleNextButtonClick} type="button">
+        <span> {currentPageNumber} </span>{' '}
+        <button disabled={!hasNextPage || isFetching} onClick={handleNextButtonClick} type="button">
           Next page
         </button>
       </div>
-      {isBusy && <p>Loading data on the client!</p>}
-      {!isBusy && isSuccess && (
+      {isSuccess && (
         <ul>
-          {data.results.map((entry) => (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-            <li key={(entry as any)?.name as string}>
+          {categoryData.results.map((entry) => (
+            <li key={(entry as any).name || (entry as any).title}>
               <code>{JSON.stringify(entry, null, 4)}</code>
             </li>
           ))}
