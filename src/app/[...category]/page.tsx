@@ -10,10 +10,18 @@ type Payload = {
   results: unknown[];
 };
 
-export default async function Category({ params }: { params: Record<string, string> }) {
-  const { category } = params;
+type CategoryParams = {
+  params: Record<string, string | string[]>; // array in case of catch all route ([...])
+};
 
-  const pageNumber = 1; // todo use value from page path
+export default async function Category({ params }: CategoryParams) {
+  const { category: categoryParam } = params;
+
+  const pageNumber =
+    typeof categoryParam === 'string' || categoryParam.length <= 1
+      ? 1
+      : parseInt(categoryParam[1], 10) || 1;
+  const category = typeof categoryParam === 'string' ? categoryParam : categoryParam[0];
   const baseURLOfCategory = `${baseURL}/${category}`;
   const urlOfPage = `${baseURLOfCategory}/?page=${pageNumber}`;
   const initialData = await getDataFromEndpoint<Payload>(urlOfPage);
