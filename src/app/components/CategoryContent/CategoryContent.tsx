@@ -27,8 +27,6 @@ function CategoryContent({
   initialPageNumber,
 }: CategoryContentProps): ReactElement {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(initialPageNumber);
-  const currentPageURL = `${baseURLOfCategory}/?page=${currentPageNumber}`;
-
   const {
     data: categoryData,
     isFetching,
@@ -37,8 +35,8 @@ function CategoryContent({
   } = useGetData<Payload>({
     // https://github.com/TanStack/query/issues/6353
     initialData: initialPageNumber === currentPageNumber ? initialData : undefined,
-    key: [category, currentPageNumber.toString()],
-    url: currentPageURL,
+    key: [category, currentPageNumber],
+    url: `${baseURLOfCategory}/?page=${currentPageNumber}`,
   });
 
   const hasPreviousPage = !isPending && Boolean(categoryData?.previous?.length);
