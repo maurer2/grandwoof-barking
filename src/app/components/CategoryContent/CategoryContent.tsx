@@ -2,9 +2,12 @@
 
 import type { ReactElement } from 'react';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import type { CategoryContentKeyFields } from './schema';
 
 import useGetData from '../../hooks/useGetData/useGetData';
+import categoryContentKeyFieldsSchema from './schema';
 
 type Payload = {
   count: number;
@@ -39,16 +42,26 @@ function CategoryContent({
     url: `${baseURLOfCategory}/?page=${currentPageNumber}`,
   });
 
+  const categoryContentKeyFields: CategoryContentKeyFields | string = useMemo(() => {
+    const parsedCategoryData = categoryContentKeyFieldsSchema.safeParse(categoryData?.results);
+
+    if (!parsedCategoryData.success) {
+      return parsedCategoryData.error.message;
+    }
+
+    return parsedCategoryData.data;
+  }, [categoryData]);
+
   const hasPreviousPage = !isPending && Boolean(categoryData?.previous?.length);
   const hasNextPage = !isPending && Boolean(categoryData?.next?.length);
 
-  function handlePreviousButtonClick() {
+  function handlePreviousButtonClick(): void {
     if (hasPreviousPage) {
       setCurrentPageNumber((previousValue) => previousValue - 1);
     }
   }
 
-  function handleNextButtonClick() {
+  function handleNextButtonClick(): void {
     if (hasNextPage) {
       setCurrentPageNumber((previousValue) => previousValue + 1);
     }
@@ -73,15 +86,16 @@ function CategoryContent({
           Next page
         </button>
       </div>
-      {isSuccess && (
+      {typeof categoryContentKeyFields !== 'string' && categoryContentKeyFields.length > 0 && (
         <ul>
-          {categoryData.results.map((entry) => (
-            <li key={(entry as any).name || (entry as any).title}>
-              <code>{JSON.stringify(entry, null, 4)}</code>
+          {categoryContentKeyFields.map((entry) => (
+            <li key={'name' in entry ? (entry.name as string) : entry.title}>
+              <code style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(entry, null, 4)}</code>
             </li>
           ))}
         </ul>
       )}
+      {typeof categoryContentKeyFields === 'string' && <p>{categoryContentKeyFields}</p>}
     </div>
   );
 }

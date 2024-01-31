@@ -1,7 +1,7 @@
 import { Simplify } from 'type-fest';
 import { z } from 'zod';
 
-const categoryPageParams = z.object({
+const categoryPageParamsSchema = z.object({
   category: z
     // .string()
     // .or(z.tuple([z.string(), z.number().optional()]).rest(z.any()))
@@ -25,7 +25,7 @@ const categoryPageParams = z.object({
     ),
 });
 
-export default categoryPageParams;
+export default categoryPageParamsSchema;
 
-export type CategoryPageParamsRaw = Simplify<z.input<typeof categoryPageParams>>;
-export type CategoryPageParams = Simplify<z.output<typeof categoryPageParams>>;
+export type CategoryPageParamsRaw = Simplify<z.input<typeof categoryPageParamsSchema>>;
+export type CategoryPageParams = Simplify<z.output<typeof categoryPageParamsSchema>>;

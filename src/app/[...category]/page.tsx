@@ -1,6 +1,6 @@
 import CategoryContent from '../components/CategoryContent/CategoryContent';
 import { getDataFromEndpoint } from '../server-actions/getDataFromEndpoint/getDataFromEndpoint';
-import categoryPageParams from './schema';
+import categoryPageParamsSchema from './schema';
 
 const baseURL = 'https://swapi.dev/api';
 
@@ -12,13 +12,11 @@ type Payload = {
 };
 
 type CategoryParams = {
-  params: Record<string, string | string[]>; // array in case of catch all route ([...])
+  params: Record<string, string[]>; // array because of catch all route ([...])
 };
 
 export default async function Category({ params }: CategoryParams) {
-  // const { category: categoryParam } = params;
-
-  const parsedParams = categoryPageParams.safeParse(params);
+  const parsedParams = categoryPageParamsSchema.safeParse(params);
   if (!parsedParams.success) {
     throw new Error(parsedParams.error.message, { cause: parsedParams.error.flatten() });
   }
