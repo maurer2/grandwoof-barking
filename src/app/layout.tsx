@@ -1,10 +1,12 @@
 // copied from https://github.com/maurer2/blue-harvest/blob/main/src/app/layout.tsx
 import type { Metadata } from 'next';
 
+import * as stylex from '@stylexjs/stylex';
 import 'modern-normalize/modern-normalize.css';
 import Link from 'next/link';
 
 import './globals.css';
+// import styles from './layout.styles';
 import Providers from './providers';
 import { getDataFromEndpoint } from './server-actions/getDataFromEndpoint/getDataFromEndpoint';
 
@@ -14,6 +16,14 @@ export const metadata: Metadata = {
 };
 
 const baseURL = 'https://swapi.dev/api';
+
+const styles = stylex.create({
+  navElement: {
+    background: 'slate',
+    color: 'white',
+    fontSize: '16rem',
+  },
+});
 
 export default async function RootLayout({
   children,
@@ -31,7 +41,7 @@ export default async function RootLayout({
       <body>
         <Providers>
           {Boolean(rootCategoriesFormatted.length) && (
-            <nav>
+            <nav {...stylex.props(styles.navElement)}>
               <Link href="/" key="home">
                 Home
               </Link>
