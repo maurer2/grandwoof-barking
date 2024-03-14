@@ -1,4 +1,7 @@
+import { Suspense } from 'react';
+
 import CategoryContent from '../components/CategoryContent/CategoryContent';
+import Loading from '../loading';
 import { getDataFromEndpoint } from '../server-actions/getDataFromEndpoint/getDataFromEndpoint';
 import categoryPageParamsSchema from './schema';
 
@@ -28,7 +31,7 @@ export default async function Category({ params }: CategoryParams) {
   const initialData = await getDataFromEndpoint<Payload>(urlOfPage);
 
   return (
-    <div>
+    <Suspense fallback={<Loading />}>
       <h2>{category}</h2>
       <CategoryContent
         baseURLOfCategory={baseURLOfCategory}
@@ -36,6 +39,6 @@ export default async function Category({ params }: CategoryParams) {
         initialData={initialData}
         initialPageNumber={pageNumber}
       />
-    </div>
+    </Suspense>
   );
 }

@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react';
 
-import { useMemo, useState } from 'react';
+import { startTransition, useMemo, useState } from 'react';
 
 import type { CategoryContentKeyFields } from './schema';
 
@@ -57,13 +57,18 @@ function CategoryContent({
 
   function handlePreviousButtonClick(): void {
     if (hasPreviousPage) {
-      setCurrentPageNumber((previousValue) => previousValue - 1);
+      startTransition(() => {
+        setCurrentPageNumber((previousValue) => previousValue - 1);
+      });
     }
   }
 
   function handleNextButtonClick(): void {
     if (hasNextPage) {
-      setCurrentPageNumber((previousValue) => previousValue + 1);
+      // https://react.dev/reference/react/Suspense#preventing-unwanted-fallbacks
+      startTransition(() => {
+        setCurrentPageNumber((previousValue) => previousValue + 1);
+      });
     }
   }
 

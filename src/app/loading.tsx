@@ -1,3 +1,9 @@
+import Marquee from 'react-fast-marquee';
+
 export default function Loading() {
-  return <p>Loading data on the server!</p>;
+  return (
+    <Marquee direction="right" speed={100}>
+      <p>Loading</p>
+    </Marquee>
+  );
 }

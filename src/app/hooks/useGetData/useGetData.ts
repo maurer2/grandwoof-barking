@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 export const fetcher = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
@@ -17,9 +17,9 @@ type UseGetDataProps<T> = {
 };
 
 function useGetData<T>({ initialData, key, url }: UseGetDataProps<T>) {
-  const queryResult = useQuery({
+  const queryResult = useSuspenseQuery({
     initialData,
-    placeholderData: keepPreviousData,
+    // placeholderData: keepPreviousData, // handled by React: https://github.com/TanStack/query/discussions/6206#discussioncomment-7343133
     queryFn: () => fetcher<T>(url),
     queryKey: key,
   });
